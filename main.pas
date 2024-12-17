@@ -171,7 +171,7 @@ begin
   until Mode = 0;
 end;
 
-// Меню для работы с матрицами
+
 procedure MenuMatrices();
 var m1, m2, result: Matrix;
 var scalar: real;
