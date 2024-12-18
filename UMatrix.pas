@@ -10,7 +10,7 @@ type
     
     public constructor Create(r, c: integer; fill: Number := new Number());
     begin
-      Data := new Number[r, c];
+      self.Data := new Number[r, c];
       self.FillMatrix(fill);
     end;
     
@@ -19,14 +19,14 @@ type
     begin
       for var i: integer := 0 to Data.GetLength(0) - 1 do
         for var j: integer := 0 to Data.GetLength(1) - 1 do
-          Data[i, j] := value;
+          self.Data[i, j] := value;
     end;
     
     // Установка значения элемента матрицы
     public procedure SetElement(i, j: integer; value: Number);
     begin
       if (i >= 0) and (i < Data.GetLength(0)) and (j >= 0) and (j < Data.GetLength(1)) then
-        Data[i, j] := value
+        self.Data[i, j] := value
       else
         raise new Exception('Индекс за пределами матрицы');
     end;
@@ -34,14 +34,14 @@ type
     // Получение элемента матрицы
     public function GetElement(i, j: integer): Number;
     begin
-      if (i >= 0) and (i < Data.GetLength(0)) and (j >= 0) and (j < Data.GetLength(1)) then
-        Result := Data[i, j]
+      if (i >= 0) and (i < self.Data.GetLength(0)) and (j >= 0) and (j < self.Data.GetLength(1)) then
+        Result := self.Data[i, j]
       else
         raise new Exception('Индекс за пределами матрицы');
     end;
     
     // Сложение матриц
-    static function operator+(a, b: Matrix): Matrix;
+    static function operator +(a, b: Matrix): Matrix;
     begin
       if (a.Data.GetLength(0) <> b.Data.GetLength(0)) or (a.Data.GetLength(1) <> b.Data.GetLength(1)) then
         raise new Exception('Матрицы должны быть одинакового размера для сложения');
@@ -92,17 +92,36 @@ type
       Result := newMatrix;
     end;
     
-    // Метод для вычисления модуля матрицы (евклидова норма)
-public function Norm: Number;
+    // Евклидова норма
+    public function Norm: Number;
     begin
-      var sumSquares: Number := new Number(0);
-      for var i := 0 to RowCount - 1 do
-        for var j := 0 to ColCount - 1 do
-          sumSquares := sumSquares + (Data[i, j] * Data[i, j]); // Сумма квадратов элементов
-      
-      Result := sumSquares.Sqrt(); // Корень из суммы квадратов
+      var sumSquares: Number := new Number();
+      for var i := 0 to RowCount() - 1 do
+        for var j := 0 to ColCount() - 1 do
+          sumSquares := sumSquares + (Data[i, j] * Data[i, j]);
+      Result := sumSquares.Sqrt();
     end;
-
+    
+    // Экспонента матрицы
+    public function ExpMatrix(terms: integer := 10): Matrix;
+    begin
+      if self.RowCount <> self.RowCount then
+        raise new Exception('ExpMatrix is only defined for square matrices');
+      
+      Result := new Matrix(RowCount, ColCount);
+      var term: Matrix := new Matrix(RowCount, ColCount);
+  
+      if self.Data[0, 0] is Complex then
+        Result.FillMatrix(new Number(new Complex(1, 1)))
+      else
+        Result.FillMatrix(new Number(1));
+      
+      for var k := 1 to terms do
+      begin
+        term := term.MultMatrix(Self).ProdMatrix(1 / k);
+        Result := Result.addMatrix(term);
+      end;
+    end;
     
     // Получение количества строк
     public function RowCount: integer;
@@ -115,7 +134,6 @@ public function Norm: Number;
     begin
       Result := Data.GetLength(1);
     end;
-    
     
     static procedure Print(
     matrix: Matrix; 

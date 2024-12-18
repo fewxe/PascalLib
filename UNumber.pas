@@ -65,7 +65,7 @@ type
       if num.ComplexValue <> nil then
         Result := num.ComplexValue
       else
-        Result := new Complex(num.RealValue.Value, 0);
+        Result := new Complex(0, 0);
     end;
     
     static function operator +(a, b: Number): Number;

@@ -61,6 +61,22 @@ type
       Result := a * b.Conjugate().Inv();
     end;
     
+    function Exp(): Complex;
+    begin
+      var expRe := Exp(Self.re);
+      Result := new Complex(expRe * Cos(Self.im), expRe * Sin(Self.im));
+    end;
+    
+    function cos(): Complex;
+    begin
+      Result := new Complex(Cos(Self.re) * Cosh(Self.im), -Sin(Self.re) * Sinh(Self.im));
+    end;
+    
+    function sin(): Complex;
+    begin
+      Result := new Complex(Sin(Self.re) * Cosh(Self.im), Cos(Self.re) * Sinh(Self.im));
+    end;
+    
     static function operator implicit(s: string): Complex;
     begin
       var signPos: integer;

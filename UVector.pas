@@ -82,7 +82,7 @@ type
     // Модуль вектора
     public function Abs(): real;
     begin
-      Result := Sqrt(real(Self * Self)); // Скалярное произведение вектора на себя
+      Result := Sqrt(real(Self * Self));
     end;
     
     // Нормализация вектора
