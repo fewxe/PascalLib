@@ -4,9 +4,8 @@ uses UComplex;
 
 type
   Number = class
-  private
-    RealValue: real? := nil;
-    ComplexValue: Complex := nil;
+  public RealValue: real? := nil;
+  public ComplexValue: Complex := nil;
   public
     
     public constructor Create(aValue: real); overload;
