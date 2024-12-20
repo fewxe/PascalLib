@@ -79,6 +79,11 @@ type
       Result := (a.x = b.x) and (a.y = b.y) and (a.z = b.z);
     end;
     
+    static function MixedProduct(a, b, c: Vector): Number;
+    begin
+      Result := a * (b ** c); // Скалярное произведение a на векторное произведение b и c
+    end;
+    
     // Модуль вектора
     public function Abs(): real;
     begin

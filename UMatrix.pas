@@ -93,7 +93,7 @@ type
     end;
     
     // Евклидова норма
-    public function Norm: Number;
+    public function Norm(): Number;
     begin
       var sumSquares: Number := new Number();
       for var i := 0 to RowCount() - 1 do
@@ -111,15 +111,15 @@ type
       Result := new Matrix(RowCount, ColCount);
       var term: Matrix := new Matrix(RowCount, ColCount);
   
-      if self.Data[0, 0] is Complex then
+      if self.Data[0, 0].ComplexValue <> nil then
         Result.FillMatrix(new Number(new Complex(1, 1)))
       else
         Result.FillMatrix(new Number(1));
       
       for var k := 1 to terms do
       begin
-        term := term.MultMatrix(Self).ProdMatrix(1 / k);
-        Result := Result.addMatrix(term);
+        term := (term * Self).Prod(1 / k);
+        Result := Result + term;
       end;
     end;
     
