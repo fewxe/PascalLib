@@ -149,6 +149,43 @@ type
       TArrayTools.PrintArray(Matrix.Data);
     end;
     
+    private static function ValidateTypeMatrix(m: Matrix): boolean;
+begin
+  var IsComplex := false;
+
+  // Проверяем тип первого элемента матрицы
+  if m.Data[0, 0].ComplexValue <> nil then 
+    IsComplex := true;
+
+  // Проходим по всем элементам матрицы
+  for var i := 0 to m.RowCount() - 1 do
+    for var j := 0 to m.ColCount() - 1 do
+    begin
+      if IsComplex then
+      begin
+        // Если матрица комплексная, но какой-то элемент не комплексный
+        if m.Data[i, j].ComplexValue = nil then
+        begin
+          Result := false;
+          exit; // Завершаем выполнение функции
+        end;
+      end
+      else
+      begin
+        // Если матрица вещественная, но какой-то элемент не вещественный
+        if m.Data[i, j].RealValue = nil then
+        begin
+          Result := false;
+          exit; // Завершаем выполнение функции
+        end;
+      end;
+    end;
+
+  // Если все элементы прошли проверку
+  Result := true;
+end;
+
+    
     public static function Read(
       mat: Matrix;
       outX: integer;
@@ -158,6 +195,8 @@ type
     begin
       var m: Matrix := new Matrix();
       m.Data := TArrayTools.ReadArray(mat.Data, outX, outY, inputX, inputY);
+      if not ValidateTypeMatrix(m) then 
+        raise new Exception('Ошибка ввода: матрица с элементами разных типов');
       Result := m;
     end;
     
@@ -165,6 +204,8 @@ type
     begin
       var m: Matrix := new Matrix();
       m.Data := TArrayTools.ReadArray(mat.Data);
+      if not ValidateTypeMatrix(m) then 
+        raise new Exception('Ошибка ввода: матрица с элементами разных типов');
       Result := m;
     end;
   

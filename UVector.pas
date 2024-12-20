@@ -20,7 +20,7 @@ type
       parts: array of string;
       x, y, z: Number;
     begin
-      parts := Str.Split([';']);
+      parts := str.Split([';']);
       
       if Length(parts) <> 3 then
         raise new Exception('Некорректный формат строки для приведения к вектору. Ожидается три координаты.');
@@ -29,11 +29,50 @@ type
       y := new Number(parts[1]);
       z := new Number(parts[2]);
       
-      self.x := x;
-      self.y := y;
-      self.z := z;
+      if not ValidateTypeVector(x, y, z) then
+        raise new Exception('Ошибка: все компоненты вектора должны быть одного типа.');
+      
+      Self.x := x;
+      Self.y := y;
+      Self.z := z;
     end;
     
+    private static function ValidateTypeVector(a, b, c: Number): boolean;
+begin
+
+  var IsComplex := a.ComplexValue <> nil;
+
+  if IsComplex then
+  begin
+    if b.RealValue <> nil then
+      begin
+        Result := false;
+        exit;
+      end;
+    if c.RealValue <> nil then
+    begin
+      Result := false;
+      exit;
+    end;
+  end;
+  if not IsComplex then
+  begin
+    if b.ComplexValue <> nil then
+      begin
+        Result := false;
+        exit;
+      end;
+    if c.ComplexValue <> nil then
+    begin
+      Result := false;
+      exit;
+    end;
+  end;
+  Result := true; // Если все проверки пройдены
+end;
+
+
+    public
     // Сложение векторов
     static function operator+(a, b: Vector): Vector;
     begin
@@ -81,7 +120,7 @@ type
     
     static function MixedProduct(a, b, c: Vector): Number;
     begin
-      Result := a * (b ** c); // Скалярное произведение a на векторное произведение b и c
+      Result := a * (b ** c);
     end;
     
     // Модуль вектора
@@ -101,21 +140,9 @@ type
       Result := Self / magnitude;
     end;
     
-      static function operator implicit(num: string): Vector;
-    var
-      parts: array of string;
-      x, y, z: Number;
+    static function operator implicit(num: string): Vector;
     begin
-      parts := num.Split([';']);
-      
-      if Length(parts) <> 3 then
-        raise new Exception('Некорректный формат строки для приведения к вектору. Ожидается три координаты.');
-      
-      x := new Number(parts[0]);
-      y := new Number(parts[1]);
-      z := new Number(parts[2]);
-      
-      Result := new Vector(x, y, z);
+      Result := new Vector(num);
     end;
     
     public function ToString(): string; override;

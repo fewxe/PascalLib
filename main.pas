@@ -36,7 +36,7 @@ begin
       TextColor(Green)
     else
       TextColor(White);
-    if i = Selected then
+    if i = Selected then 
       Write('-> ');
     Writeln(Menu[i].Name);
   end;
@@ -441,7 +441,7 @@ end;
 procedure VectorMenu();
 begin
   var Menu: TMenuItems;
-  SetLength(Menu, 8);
+  SetLength(Menu, 7);
   
   Menu[0].Name := 'Сложение';
   Menu[0].Callback := TestAddVector;
@@ -455,14 +455,14 @@ begin
   Menu[3].Name := 'Смешаное произведение';
   Menu[3].Callback := TestMixedProduct;
   
-  Menu[5].Name := 'Умножение на скаляр';
-  Menu[5].Callback := TestScalarMultiplication;
+  Menu[4].Name := 'Умножение на скаляр';
+  Menu[4].Callback := TestScalarMultiplication;
   
-  Menu[6].Name := 'Деление на скаляр';
-  Menu[6].Callback := TestScalarDivision;
+  Menu[5].Name := 'Деление на скаляр';
+  Menu[5].Callback := TestScalarDivision;
 
-  Menu[7].Name := 'выход';
-  Menu[7].Callback := ExitProgram;
+  Menu[6].Name := 'выход';
+  Menu[6].Callback := ExitProgram;
 
   HandleMenu(Menu, selected);
   
